@@ -1,0 +1,311 @@
+{
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "foundation_type",
+      "text": "Foundation type (pick the primary system you\u2019re inspecting):",
+      "type": "single",
+      "options": [
+        {
+          "label": "Basement",
+          "value": "basement",
+          "tags": [
+            "foundation_basement"
+          ]
+        },
+        {
+          "label": "Crawlspace",
+          "value": "crawlspace",
+          "tags": [
+            "foundation_crawlspace"
+          ]
+        },
+        {
+          "label": "Slab",
+          "value": "slab",
+          "tags": [
+            "foundation_slab"
+          ]
+        },
+        {
+          "label": "Multiple / Mixed",
+          "value": "multiple",
+          "tags": [
+            "foundation_multiple"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "water_intrusion",
+      "text": "Any active water intrusion / seepage or standing water?",
+      "type": "single",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "tags": [
+            "symptom_water"
+          ]
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "humidity_mold",
+      "text": "High humidity, musty odor, condensation, or visible mold?",
+      "type": "single",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "tags": [
+            "symptom_humidity"
+          ]
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "wall_movement",
+      "text": "Foundation wall movement (cracks, bowing, leaning, stair-step, shearing)?",
+      "type": "single",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "tags": [
+            "symptom_wall_movement"
+          ]
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "floor_sag",
+      "text": "Sagging / bouncy floors, sloped rooms, sticking doors, or weak floor framing?",
+      "type": "single",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "tags": [
+            "symptom_floor_framing"
+          ]
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "slab_settlement",
+      "text": "Slab settlement / trip hazards / voids / uneven concrete? (Driveway, walkway, garage, interior slab)",
+      "type": "single",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "tags": [
+            "symptom_slab_settlement"
+          ]
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "r_groundwater_from_water",
+      "whenAll": [
+        "symptom_water"
+      ],
+      "addTags": [
+        "need_groundwater_control"
+      ]
+    },
+    {
+      "id": "r_env_from_humidity",
+      "whenAll": [
+        "symptom_humidity"
+      ],
+      "addTags": [
+        "need_environment_control"
+      ]
+    },
+    {
+      "id": "r_wall_movement",
+      "whenAll": [
+        "symptom_wall_movement"
+      ],
+      "addTags": [
+        "need_wall_stabilization",
+        "need_perimeter_stabilization"
+      ]
+    },
+    {
+      "id": "r_floor_framing",
+      "whenAll": [
+        "symptom_floor_framing"
+      ],
+      "addTags": [
+        "need_floor_framing_stabilization"
+      ]
+    },
+    {
+      "id": "r_slab_settlement",
+      "whenAll": [
+        "symptom_slab_settlement"
+      ],
+      "addTags": [
+        "need_concrete_stabilization"
+      ]
+    },
+    {
+      "id": "r_wall_moisture",
+      "whenAll": [
+        "symptom_water",
+        "symptom_humidity"
+      ],
+      "addTags": [
+        "need_wall_moisture_control"
+      ]
+    }
+  ],
+  "solutions": [
+    {
+      "id": "control_groundwater",
+      "title": "Control Groundwater Seepage",
+      "description": "Drainage + sump collection/discharge to stop seepage/standing water.",
+      "tags": [
+        "need_groundwater_control"
+      ],
+      "requiredTags": [
+        "foundation_basement",
+        "foundation_crawlspace",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "control_wall_moisture",
+      "title": "Control Wall Moisture",
+      "description": "Wall vapor / leak control: wall seal, panels, bright wall / cleanspace wall.",
+      "tags": [
+        "need_wall_moisture_control",
+        "need_environment_control"
+      ],
+      "requiredTags": [
+        "foundation_basement",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "control_environment",
+      "title": "Control the Environment",
+      "description": "Humidity/air quality control: dehumidification, air system, condensate handling.",
+      "tags": [
+        "need_environment_control"
+      ],
+      "requiredTags": [
+        "foundation_basement",
+        "foundation_crawlspace",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "stabilize_walls",
+      "title": "Stabilize Basement Walls",
+      "description": "Address bowing/cracking walls with anchors/braces/carbon systems (as applicable).",
+      "tags": [
+        "need_wall_stabilization"
+      ],
+      "requiredTags": [
+        "foundation_basement",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "stabilize_perimeter",
+      "title": "Stabilize Perimeter Foundation",
+      "description": "Settlement/lift stabilization with piers (helical/push).",
+      "tags": [
+        "need_perimeter_stabilization"
+      ],
+      "requiredTags": [
+        "foundation_basement",
+        "foundation_crawlspace",
+        "foundation_slab",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "stabilize_floor_framing",
+      "title": "Stabilize Floor Framing System",
+      "description": "Correct sag/bounce using supports, supplemental beams, sistering, etc.",
+      "tags": [
+        "need_floor_framing_stabilization"
+      ],
+      "requiredTags": [
+        "foundation_basement",
+        "foundation_crawlspace",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "stabilize_concrete",
+      "title": "Stabilize Your Concrete",
+      "description": "Lift/level slabs, seal cracks, correct voids/trip hazards.",
+      "tags": [
+        "need_concrete_stabilization"
+      ],
+      "requiredTags": [
+        "foundation_slab",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "crawlspace_other",
+      "title": "Crawlspace: Other / Change the Environment",
+      "description": "Encapsulation/liners/doors/biocide/mold remediation etc. (crawlspace-specific).",
+      "tags": [
+        "need_environment_control",
+        "symptom_humidity"
+      ],
+      "requiredTags": [
+        "foundation_crawlspace",
+        "foundation_multiple"
+      ]
+    },
+    {
+      "id": "properly_insulate_home",
+      "title": "Properly Insulate the Home",
+      "description": "Thermal/insulation upgrades (rim band, SilverGlo, etc.).",
+      "tags": [
+        "need_environment_control"
+      ],
+      "requiredTags": [
+        "foundation_crawlspace",
+        "foundation_multiple",
+        "foundation_basement"
+      ]
+    }
+  ]
+}

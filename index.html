@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f1115" />
+  <title>CFI Field Tool</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <header>
+    <h1>CFI Field Tool</h1>
+    <div class="sub">Checklist • Solutions • Flight Plan • Perimeter Drawing • Disposition • Handoff</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Job Info</h2>
+      <div class="grid">
+        <label>Address<input id="jobAddress" placeholder="123 Main St, City, ST"></label>
+        <label>Homeowner<input id="jobHomeowner" placeholder="Name"></label>
+        <label>Date<input id="jobDate" type="date"></label>
+      </div>
+      <label>Notes<textarea id="jobNotes" rows="3" placeholder="Quick context, constraints, access notes..."></textarea></label>
+    </section>
+
+    <section class="card">
+      <h2>Logic Checklist</h2>
+      <div id="questionHost"></div>
+      <div class="row">
+        <button id="resetAnswers" class="secondary" type="button">Reset</button>
+        <button id="saveNow" class="secondary" type="button">Save</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Suggested Solutions</h2>
+      <div id="solutionHost" class="chips"></div>
+      <div class="hint">Tap a solution to open Flight Plan.</div>
+    </section>
+
+    <section class="card" id="flightPlanCard" style="display:none;">
+      <h2 id="flightPlanTitle">Flight Plan</h2>
+      <div id="flightPlanHints" class="hint"></div>
+      <div id="flightPlanHost" class="flight"></div>
+      <div class="row">
+        <button id="addLineItem" class="secondary" type="button">Add Line Item</button>
+        <button id="closeFlightPlan" class="secondary" type="button">Close</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Perimeter Measurements → Auto Drawing</h2>
+      <div class="row">
+        <button id="modeRect" class="secondary" type="button">Rectangle Mode</button>
+        <button id="modeWalk" class="secondary" type="button">Walk-the-Wall Mode</button>
+        <button id="clearPerimeter" class="secondary" type="button">Clear</button>
+      </div>
+
+      <div id="rectPanel" class="panel">
+        <div class="grid">
+          <label>Length (ft)<input id="rectL" type="number" step="0.1" min="0" placeholder="e.g., 30"></label>
+          <label>Width (ft)<input id="rectW" type="number" step="0.1" min="0" placeholder="e.g., 22"></label>
+          <label>Wall Height (ft)<input id="wallH" type="number" step="0.1" min="0" placeholder="e.g., 4"></label>
+        </div>
+        <div class="row">
+          <button id="applyRect" type="button">Draw Rectangle</button>
+        </div>
+      </div>
+
+      <div id="walkPanel" class="panel" style="display:none;">
+        <div class="hint">
+          Each segment has a <b>length</b> and a <b>turn angle</b> at the end of the segment.
+          Right turn = 90, left = -90. Closure error tells you how far you are from closing the shape.
+        </div>
+        <div id="segmentsHost"></div>
+        <div class="row">
+          <button id="addSeg" class="secondary" type="button">Add Segment</button>
+          <button id="applyWalk" type="button">Draw Walk</button>
+        </div>
+      </div>
+
+      <div class="canvasWrap">
+        <canvas id="planCanvas" width="900" height="520"></canvas>
+      </div>
+
+      <div class="grid">
+        <label>Perimeter (ft)<input id="perimOut" readonly></label>
+        <label>Area (sq ft)<input id="areaOut" readonly></label>
+        <label>Closure Error (ft)<input id="closureOut" readonly></label>
+      </div>
+
+      <div class="row">
+        <button id="applyAutoQuant" class="secondary" type="button">Auto-fill Quantities from Measurements</button>
+      </div>
+
+      <div class="hint">
+        Auto-fill applies defaults: drains LF=perimeter, encaps SF=area, wall liner SF=perimeter×height (if height provided).
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Disposition</h2>
+      <div class="grid">
+        <label>Status
+          <select id="dispoStatus">
+            <option value="unknown">Unknown</option>
+            <option value="sold">Sold</option>
+            <option value="not_sold">Not Sold</option>
+            <option value="needs_followup">Needs Follow-up</option>
+          </select>
+        </label>
+        <label>Next Contact Date<input id="followupDate" type="date"></label>
+        <label>Contact Method
+          <select id="followupMethod">
+            <option value="call">Call</option>
+            <option value="text">Text</option>
+            <option value="email">Email</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Disposition Notes<textarea id="dispoNotes" rows="4" placeholder="Auto-generated. Edit as needed."></textarea></label>
+      <div class="row">
+        <button id="regenDispo" class="secondary" type="button">Regenerate Notes</button>
+        <button id="regenPlan" class="secondary" type="button">Regenerate Follow-up Plan</button>
+      </div>
+      <div id="followupPlan" class="hint"></div>
+    </section>
+
+    <section class="card">
+      <h2>Field Prompts</h2>
+      <div class="checklist" id="fieldPrompts"></div>
+      <div class="hint">Quick reminders to capture photos/readings and reduce missed steps.</div>
+    </section>
+
+    <section class="card" id="summaryCard">
+      <h2>Handoff</h2>
+      <div class="row">
+        <button id="togglePreview" class="secondary" type="button">Preview Handoff</button>
+        <button id="copySummary" class="secondary" type="button">Copy Handoff</button>
+        <button id="printSummary" class="secondary" type="button">Print</button>
+      </div>
+
+      <div id="handoffPreview" class="handoff-preview" style="display:none;"></div>
+      <div id="summaryHost"></div>
+      <div class="hint">Preview is the same format used for printing.</div>
+    </section>
+
+    <section class="card">
+      <h2>Export / Import</h2>
+      <div class="row">
+        <button id="exportBtn" type="button">Export Job JSON</button>
+        <label class="file">
+          Import Job JSON
+          <input id="importFile" type="file" accept="application/json" />
+        </label>
+      </div>
+      <div class="hint">Export at end of inspection. Import to resume on another device.</div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Local autosave enabled. Add to Home Screen for iPad-like use.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
